@@ -217,6 +217,8 @@ class LanceDBVectorStore(BasePydanticVectorStore):
         else:
             where = kwargs.pop("where", None)
 
+        metric = kwargs.pop("metric", "L2")
+
         table = self._connection.open_table(self.table_name)
         lance_query = (
             table.search(
@@ -225,6 +227,7 @@ class LanceDBVectorStore(BasePydanticVectorStore):
             )
             .limit(query.similarity_top_k)
             .where(where)
+            .metric(metric)
             .nprobes(self.nprobes)
         )
 
